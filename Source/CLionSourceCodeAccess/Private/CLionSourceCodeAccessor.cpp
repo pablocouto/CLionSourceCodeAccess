@@ -72,8 +72,9 @@ bool FCLionSourceCodeAccessor::GenerateFromCodeLiteProject()
 	// Reset our working folder, just incase
 	this->WorkingMonoPath = "";
 
+	// TODO: Test with < empty / with spaces > project names
 	// Start our master CMakeList file
-	FString OutputTemplate = TEXT("cmake_minimum_required (VERSION 2.6)\nproject (UE4)\n");
+	FString OutputTemplate = FString::Printf(TEXT("cmake_minimum_required (VERSION 2.6)\nproject (%s)\n"), *this->WorkingProjectName);
 	OutputTemplate.Append(TEXT("set(CMAKE_CXX_STANDARD 11)\n"));
   
   //Set Response files output
