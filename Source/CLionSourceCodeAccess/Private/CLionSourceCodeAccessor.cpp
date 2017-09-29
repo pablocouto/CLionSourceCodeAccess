@@ -513,9 +513,11 @@ FString FCLionSourceCodeAccessor::HandleConfiguration(FXmlNode* CurrentNode, con
 			}
 			else
 			{
+				// FIXME: This is brittle and non-portable. Naughty hack.
+				ReturnContent += FString::Printf(TEXT("\nset(GENERATE_RANDOM cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n1)\n"));
 				ReturnContent += FString::Printf(TEXT("\n# Custom target for %s project, %s configuration\n"),
 				                                 *SubprojectName, *ConfigurationName);
-				ReturnContent += FString::Printf(TEXT("add_custom_target(%s-%s ${BUILD} && %s -game -progress)\n"),
+				ReturnContent += FString::Printf(TEXT("add_custom_target(%s-%s ${BUILD} && %s -game -progress && cd ${PROJECT_SOURCE_DIR}/Binaries/Linux && cp libUE4Editor-${PROJECT_NAME}.so libUE4Editor-${PROJECT_NAME}-`${GENERATE_RANDOM}`.so)\n"),
 				                                 *SubprojectName, *ConfigurationName, *BuildCommand);
 				ReturnContent += FString::Printf(TEXT("add_custom_target(%s-%s-CLEAN ${BUILD} && %s)\n\n"),
 				                                 *SubprojectName, *ConfigurationName, *CleanCommand);
