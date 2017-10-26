@@ -598,6 +598,18 @@ bool FCLionSourceCodeAccessor::OpenSolution()
 	return true;
 }
 
+// TODO Implementation.
+bool FCLionSourceCodeAccessor::OpenSolutionAtPath(const FString& InSolutionPath)
+{
+	return false;
+}
+
+// TODO Implementation.
+bool FCLionSourceCodeAccessor::DoesSolutionExist() const
+{
+	return false;
+}
+
 bool FCLionSourceCodeAccessor::OpenSourceFiles(const TArray<FString>& AbsoluteSourcePaths)
 {
 	if (!this->Settings->IsSetup())

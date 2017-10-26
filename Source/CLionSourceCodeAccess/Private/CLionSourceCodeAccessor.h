@@ -25,6 +25,10 @@ public:
 
 	virtual bool OpenSolution() override;
 
+	virtual bool OpenSolutionAtPath(const FString& InSolutionPath) override;
+
+	virtual bool DoesSolutionExist() const override;
+
 	virtual bool OpenFileAtLine(const FString& FullPath, int32 LineNumber, int32 ColumnNumber = 0) override;
 
 	virtual bool OpenSourceFiles(const TArray<FString>& AbsoluteSourcePaths) override;
