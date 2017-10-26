@@ -254,7 +254,9 @@ bool FCLionSourceCodeAccessor::GenerateFromCodeLiteProject()
 	FString DefinitionsProcessed = TEXT("add_definitions(\n");
 	for (FString Line : DefinitionsLines)
 	{
-		DefinitionsProcessed.Append(FString::Printf(TEXT("\t-D%s\n"), *Line));
+		auto SanitizedLine = Line.Replace(TEXT("TEXT("), TEXT(""), ESearchCase::Type::CaseSensitive).Replace(TEXT(")"), TEXT(""), ESearchCase::Type::CaseSensitive);
+
+		DefinitionsProcessed.Append(FString::Printf(TEXT("\t-D%s\n"), *SanitizedLine));
 	}
 	DefinitionsProcessed.Append(TEXT(")\n"));
 
@@ -513,6 +515,7 @@ FString FCLionSourceCodeAccessor::HandleConfiguration(FXmlNode* CurrentNode, con
 			}
 			else
 			{
+				// FIXME: Avoid redefinition of 'GENERATE_RANDOM' for each target.
 				// FIXME: This is brittle and non-portable. Naughty hack.
 				ReturnContent += FString::Printf(TEXT("\nset(GENERATE_RANDOM cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n1)\n"));
 				ReturnContent += FString::Printf(TEXT("\n# Custom target for %s project, %s configuration\n"),
