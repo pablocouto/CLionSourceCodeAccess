@@ -72,8 +72,9 @@ bool FCLionSourceCodeAccessor::GenerateFromCodeLiteProject()
 	// Reset our working folder, just incase
 	this->WorkingMonoPath = "";
 
+	// TODO: Test with < empty / with spaces > project names
 	// Start our master CMakeList file
-	FString OutputTemplate = TEXT("cmake_minimum_required (VERSION 2.6)\nproject (UE4)\n");
+	FString OutputTemplate = FString::Printf(TEXT("cmake_minimum_required (VERSION 2.6)\nproject (%s)\n"), *this->WorkingProjectName);
 	OutputTemplate.Append(TEXT("set(CMAKE_CXX_STANDARD 11)\n"));
 
   //Set Response files output
@@ -512,9 +513,11 @@ FString FCLionSourceCodeAccessor::HandleConfiguration(FXmlNode* CurrentNode, con
 			}
 			else
 			{
+				// FIXME: This is brittle and non-portable. Naughty hack.
+				ReturnContent += FString::Printf(TEXT("\nset(GENERATE_RANDOM cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n1)\n"));
 				ReturnContent += FString::Printf(TEXT("\n# Custom target for %s project, %s configuration\n"),
 				                                 *SubprojectName, *ConfigurationName);
-				ReturnContent += FString::Printf(TEXT("add_custom_target(%s-%s ${BUILD} && %s -game -progress)\n"),
+				ReturnContent += FString::Printf(TEXT("add_custom_target(%s-%s ${BUILD} && %s -game -progress && cd ${PROJECT_SOURCE_DIR}/Binaries/Linux && cp libUE4Editor-${PROJECT_NAME}.so libUE4Editor-${PROJECT_NAME}-`${GENERATE_RANDOM}`.so)\n"),
 				                                 *SubprojectName, *ConfigurationName, *BuildCommand);
 				ReturnContent += FString::Printf(TEXT("add_custom_target(%s-%s-CLEAN ${BUILD} && %s)\n\n"),
 				                                 *SubprojectName, *ConfigurationName, *CleanCommand);
