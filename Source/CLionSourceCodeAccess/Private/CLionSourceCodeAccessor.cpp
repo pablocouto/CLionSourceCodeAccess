@@ -112,7 +112,7 @@ bool FCLionSourceCodeAccessor::GenerateFromCodeLiteProject()
 #else
 	const FString BuildProjectCommand = *this->Settings->Mono.FilePath;
 	const FString BuildProjectParameters = FString::Printf(
-			TEXT("\"%s\" \"%s\" -Game \"%s\" -OnlyPublic -CodeLiteFile -CurrentPlatform -NoShippingConfigs"),
+			TEXT("\"%s\" -projectfiles -project=\"%s\" -Game \"%s\" -OnlyPublic -CodeLiteFile -CurrentPlatform -NoShippingConfigs"),
 			*UnrealBuildToolPath,
 			*ProjectFilePath,
 			*this->WorkingProjectName);
@@ -297,6 +297,7 @@ bool FCLionSourceCodeAccessor::GenerateFromCodeLiteProject()
 	FScopedSlowTask SubProjectGenerationTask(ProjectNodes.Num(),
 	                                         LOCTEXT("StartSubProjects", "Generating Sub Project File"));
 	SubProjectGenerationTask.MakeDialog();
+
 
 
 	// This is gonna function as a storage block of what we think the mono path (inside of HandleConfiguration)
